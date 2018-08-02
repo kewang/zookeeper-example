@@ -35,6 +35,8 @@ public class App {
         cache.getListenable().addListener(new TreeCacheListener() {
             @Override
             public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent event) throws Exception {
+                System.out.println("=== TreeCacheListener ===");
+
                 System.out.println("事件类型：" + event.getType() + " | 路径：" + (null != event.getData() ? event.getData().getPath() : null));
             }
         });
@@ -48,6 +50,8 @@ public class App {
         cache.getListenable().addListener(new NodeCacheListener() {
             @Override
             public void nodeChanged() throws Exception {
+                System.out.println("=== NodeCacheListener ===");
+
                 ChildData data = cache.getCurrentData();
 
                 if (null != data) {
@@ -67,6 +71,8 @@ public class App {
         cache.getListenable().addListener(new PathChildrenCacheListener() {
             @Override
             public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
+                System.out.println("=== PathChildrenCacheListener ===");
+
                 System.out.println("事件类型：" + event.getType());
 
                 if (null != event.getData()) {
