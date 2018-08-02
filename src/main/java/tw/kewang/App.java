@@ -38,6 +38,8 @@ public class App {
                 System.out.println("=== TreeCacheListener ===");
 
                 System.out.println("事件类型：" + event.getType() + " | 路径：" + (null != event.getData() ? event.getData().getPath() : null));
+
+                System.out.println();
             }
         });
 
@@ -59,6 +61,8 @@ public class App {
                 } else {
                     System.out.println("节点被删除!");
                 }
+
+                System.out.println();
             }
         });
 
@@ -78,6 +82,8 @@ public class App {
                 if (null != event.getData()) {
                     System.out.println("节点数据：" + event.getData().getPath() + " = " + new String(event.getData().getData()));
                 }
+
+                System.out.println();
             }
         });
 
