@@ -8,13 +8,15 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 
 public class App {
     private static final String PATH = "/caches";
+    private static final String CONNECT_STRING = "127.0.0.1";
+    private static final String NAMESPACE = "test";
 
     public static void main(String[] args) throws Exception {
         RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
 
-        CuratorFramework client = CuratorFrameworkFactory.builder().connectString("127.0.0.1")
+        CuratorFramework client = CuratorFrameworkFactory.builder().connectString(CONNECT_STRING)
                 .sessionTimeoutMs(5000).connectionTimeoutMs(5000).retryPolicy(retryPolicy)
-                .namespace("test").build();
+                .namespace(NAMESPACE).build();
 
         client.start();
 
@@ -37,7 +39,8 @@ public class App {
             public void childEvent(CuratorFramework curatorFramework, TreeCacheEvent event) throws Exception {
                 System.out.println("=== TreeCacheListener ===");
 
-                System.out.println("事件类型：" + event.getType() + " | 路径：" + (null != event.getData() ? event.getData().getPath() : null));
+                System.out.println("type: " + event.getType());
+                System.out.println("path: " + (null != event.getData() ? event.getData().getPath() : null));
 
                 System.out.println();
             }
@@ -57,9 +60,9 @@ public class App {
                 ChildData data = cache.getCurrentData();
 
                 if (null != data) {
-                    System.out.println("节点数据：" + new String(cache.getCurrentData().getData()));
+                    System.out.println("node data: " + new String(cache.getCurrentData().getData()));
                 } else {
-                    System.out.println("节点被删除!");
+                    System.out.println("node was removed");
                 }
 
                 System.out.println();
@@ -77,10 +80,10 @@ public class App {
             public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent event) throws Exception {
                 System.out.println("=== PathChildrenCacheListener ===");
 
-                System.out.println("事件类型：" + event.getType());
+                System.out.println("type: " + event.getType());
 
                 if (null != event.getData()) {
-                    System.out.println("节点数据：" + event.getData().getPath() + " = " + new String(event.getData().getData()));
+                    System.out.println("node data: " + event.getData().getPath() + " = " + new String(event.getData().getData()));
                 }
 
                 System.out.println();
