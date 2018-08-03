@@ -12,6 +12,7 @@ import org.apache.curator.retry.ExponentialBackoffRetry;
 
 public class App {
     private static final String PATH = "/caches";
+    private static final String PATH_COUNT = "/count";
     private static final String CONNECT_STRING = "127.0.0.1";
     private static final String NAMESPACE = "test";
 
@@ -37,7 +38,7 @@ public class App {
     }
 
     private static void createSharedCounterListener(CuratorFramework client) throws Exception {
-        SharedCount count = new SharedCount(client, PATH, 0);
+        SharedCount count = new SharedCount(client, PATH + PATH_COUNT, 1);
 
         count.addListener(new SharedCountListener() {
             @Override
