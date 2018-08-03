@@ -4,6 +4,10 @@ import org.apache.curator.RetryPolicy;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.*;
+import org.apache.curator.framework.recipes.shared.SharedCount;
+import org.apache.curator.framework.recipes.shared.SharedCountListener;
+import org.apache.curator.framework.recipes.shared.SharedCountReader;
+import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 
 public class App {
@@ -23,12 +27,39 @@ public class App {
         createPathChildrenCacheListener(client);
         createNodeCacheListener(client);
         createTreeCacheListener(client);
+        createSharedCounterListener(client);
 
         try {
             Thread.sleep(Long.MAX_VALUE);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private static void createSharedCounterListener(CuratorFramework client) throws Exception {
+        SharedCount count = new SharedCount(client, PATH, 0);
+
+        count.addListener(new SharedCountListener() {
+            @Override
+            public void countHasChanged(SharedCountReader sharedCountReader, int i) throws Exception {
+                System.out.println("=== SharedCounterListener ===");
+
+                System.out.println("Counter's value is changed to " + i);
+
+                System.out.println();
+            }
+
+            @Override
+            public void stateChanged(CuratorFramework curatorFramework, ConnectionState connectionState) {
+                System.out.println("=== SharedCounterListener ===");
+
+                System.out.println("State changed: " + connectionState.toString());
+
+                System.out.println();
+            }
+        });
+
+        count.start();
     }
 
     private static void createTreeCacheListener(CuratorFramework client) throws Exception {
